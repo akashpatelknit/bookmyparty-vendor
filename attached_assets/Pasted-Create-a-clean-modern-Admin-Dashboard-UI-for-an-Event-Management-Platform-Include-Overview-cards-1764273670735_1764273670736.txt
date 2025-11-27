@@ -1,0 +1,206 @@
+Create a clean, modern Admin Dashboard UI for an Event Management Platform.
+Include:
+
+Overview cards: Total Events, Active Events, Registered Users, Total Revenue
+
+Line/Bar chart: Monthly Revenue
+
+Pie chart: Event Category Breakdown
+
+Recent Activity section (latest bookings, user actions)
+
+Quick actions: Create Event, View Orders
+
+Responsive grid layout
+
+Sidebar + top navbar included
+
+Use a light professional theme with blue as primary color.
+
+✅ 2. Messages – Prompt
+
+PROMPT:
+
+Create a modern Messages / Inbox UI for an Admin Event Management Dashboard.
+Include:
+
+Left panel: conversation list with search bar, unread indicators, filters (Unread, Starred, All)
+
+Right panel: chat window with message bubbles, timestamps, attachments button, emoji option
+
+Message input box with send button
+
+Active user info header
+
+Responsive two-column layout
+
+Design it clean, minimal, and easy to navigate.
+
+✅ 3. Wallet – Prompt
+
+PROMPT:
+
+Design a Wallet Page UI for an Event Management Admin Dashboard.
+Include:
+
+Current Balance card
+
+Buttons: Add Money, Withdraw Money
+
+Transaction History table (ID, Type, Amount, Status, Date)
+
+Filters (Date range, Type)
+
+Graph for wallet activity (optional)
+
+Use financial card styling with clear green/red indicators.
+
+✅ 4. Password – Prompt
+
+PROMPT:
+
+Create a simple, secure-looking Update Password UI.
+Include:
+
+Fields: Old Password, New Password, Confirm Password
+
+Password strength indicator
+
+Success/error messages
+
+Save Changes button
+
+Clean, minimal card layout
+
+Use a security-focused visual theme.
+
+✅ 5. Orders – Prompt
+
+PROMPT:
+
+Design an Orders Management Page UI for an Event Management Admin Dashboard.
+Include:
+
+Orders table (Order ID, User, Event, Amount, Payment Status, Event Date, Created At)
+
+Filters: Event, Status, Date range
+
+Pagination
+
+Order Details modal or side-panel
+
+Search bar at top
+
+Use a professional, data-rich table layout.
+
+✅ 6. Contact Admin – Prompt
+
+PROMPT:
+
+Create a Contact Admin / Support Ticket UI for an Event Management Dashboard.
+Include:
+
+Form: Subject, Message, Attach File
+
+Ticket history list with statuses (Open, In Progress, Closed)
+
+Admin responses thread view
+
+Submit button
+
+Clean, support-style layout
+
+Use soft colors and clarity-focused UI.
+
+✅ 7. Loans – Prompt
+
+PROMPT:
+
+Design a Loans Page UI for an Event Management Admin Dashboard.
+Include:
+
+Loan Status Card (Approved / Pending / Rejected)
+
+Loan Application form (Amount, Duration, Purpose)
+
+Loan history table
+
+EMI calculator widget card
+
+Progress indicators
+
+Use a financial dashboard theme.
+
+✅ 8. Subscriptions – Prompt
+
+PROMPT:
+
+Create a Subscription Management UI.
+Include:
+
+Current Plan card
+
+Pricing tier cards: Basic, Pro, Enterprise
+
+Upgrade / downgrade buttons
+
+Subscription History table
+
+Feature comparison list
+
+Use vibrant colors and SaaS-style design.
+
+✅ 9. Edit Profile – Prompt
+
+PROMPT:
+
+Create a modern Edit Profile UI.
+Include:
+
+Profile photo upload
+
+Fields: Name, Email, Phone, Address
+
+Save Changes button
+
+Last updated timestamp
+
+Two-column layout for desktop
+
+Make it clean, user-friendly, and well-spaced.
+
+✅ 10. Logout – Prompt
+
+PROMPT:
+
+Create a Logout Confirmation UI.
+Include:
+
+Modal with warning icon
+
+Message: “Are you sure you want to log out?”
+
+Buttons: Cancel & Logout
+
+Minimal, centered layout
+
+Use a calm, neutral design.
+
+✅ 11. Delete My Account – Prompt
+
+PROMPT:
+
+Create a Delete Account Warning UI.
+Include:
+
+Big danger warning section
+
+Message: consequences of account deletion
+
+Password confirmation field
+
+Red “Permanently Delete Account” button
+
+Safe UI spacing and bold warning text
+
+Style using danger colors (red tones).
