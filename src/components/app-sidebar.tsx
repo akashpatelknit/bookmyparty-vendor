@@ -85,7 +85,7 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-semibold text-sidebar-foreground">
-              EventHub
+              BookMyParty
             </span>
             <span className="text-xs text-muted-foreground">
               Vendor Dashboard
