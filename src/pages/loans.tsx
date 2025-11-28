@@ -11,9 +11,14 @@ import {
   Calculator,
   Calendar,
   DollarSign,
-  TrendingUp,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -45,8 +50,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { queryClient, apiRequest } from "@/lib/queryClient";
-import type { Loan } from "@shared/schema";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { Loan } from "@/types/types";
 import { cn } from "@/lib/utils";
 
 const loanFormSchema = z.object({
@@ -107,7 +112,9 @@ function LoanStatusCard({ loan }: { loan: Loan | null }) {
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Current Loan</CardTitle>
-          <Badge className={cn("text-xs", getStatusColor(loan.status || "pending"))}>
+          <Badge
+            className={cn("text-xs", getStatusColor(loan.status || "pending"))}
+          >
             {loan.status}
           </Badge>
         </div>
@@ -116,9 +123,12 @@ function LoanStatusCard({ loan }: { loan: Loan | null }) {
         <div className="flex items-center gap-4">
           {getStatusIcon(loan.status || "pending")}
           <div className="flex-1">
-            <p className="text-2xl font-bold">${loan.amount.toLocaleString()}</p>
+            <p className="text-2xl font-bold">
+              ${loan.amount.toLocaleString()}
+            </p>
             <p className="text-sm text-muted-foreground">
-              {loan.duration} months @ {loan.emi ? `$${loan.emi}/mo` : "Calculating..."}
+              {loan.duration} months @{" "}
+              {loan.emi ? `$${loan.emi}/mo` : "Calculating..."}
             </p>
           </div>
         </div>
@@ -155,7 +165,8 @@ function EMICalculator() {
 
   const calculateEMI = (principal: number, months: number, rate: number) => {
     const monthlyRate = rate / 12 / 100;
-    const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
+    const emi =
+      (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
       (Math.pow(1 + monthlyRate, months) - 1);
     return Math.round(emi);
   };
@@ -182,7 +193,9 @@ function EMICalculator() {
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <label>Loan Amount</label>
-              <span className="font-medium">${loanAmount.toLocaleString()}</span>
+              <span className="font-medium">
+                ${loanAmount.toLocaleString()}
+              </span>
             </div>
             <Slider
               value={[loanAmount]}
@@ -215,15 +228,21 @@ function EMICalculator() {
         <div className="bg-muted/50 rounded-lg p-4 space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">Monthly EMI</span>
-            <span className="text-xl font-bold text-primary">${emi.toLocaleString()}</span>
+            <span className="text-xl font-bold text-primary">
+              ${emi.toLocaleString()}
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-muted-foreground">Total Interest</span>
-            <span className="font-medium">${totalInterest.toLocaleString()}</span>
+            <span className="font-medium">
+              ${totalInterest.toLocaleString()}
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-muted-foreground">Total Payment</span>
-            <span className="font-medium">${totalPayment.toLocaleString()}</span>
+            <span className="font-medium">
+              ${totalPayment.toLocaleString()}
+            </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-muted-foreground">Interest Rate</span>
@@ -235,7 +254,13 @@ function EMICalculator() {
   );
 }
 
-function LoanHistoryTable({ loans, loading }: { loans: Loan[]; loading: boolean }) {
+function LoanHistoryTable({
+  loans,
+  loading,
+}: {
+  loans: Loan[];
+  loading: boolean;
+}) {
   if (loading) {
     return (
       <div className="space-y-3">
@@ -269,15 +294,24 @@ function LoanHistoryTable({ loans, loading }: { loans: Loan[]; loading: boolean 
       <TableBody>
         {loans.map((loan) => (
           <TableRow key={loan.id} data-testid={`loan-row-${loan.id}`}>
-            <TableCell className="font-medium">${loan.amount.toLocaleString()}</TableCell>
+            <TableCell className="font-medium">
+              ${loan.amount.toLocaleString()}
+            </TableCell>
             <TableCell>{loan.duration} months</TableCell>
             <TableCell>{loan.emi ? `$${loan.emi}` : "-"}</TableCell>
             <TableCell>
-              <Badge className={cn("text-xs", getStatusColor(loan.status || "pending"))}>
+              <Badge
+                className={cn(
+                  "text-xs",
+                  getStatusColor(loan.status || "pending")
+                )}
+              >
                 {loan.status}
               </Badge>
             </TableCell>
-            <TableCell className="text-muted-foreground">{loan.createdAt}</TableCell>
+            <TableCell className="text-muted-foreground">
+              {loan.createdAt}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -297,9 +331,54 @@ export default function Loans() {
     },
   });
 
-  const { data: loans, isLoading } = useQuery<Loan[]>({
-    queryKey: ["/api/loans"],
-  });
+  // const { data: loans, isLoading } = useQuery<Loan[]>({
+  //   queryKey: ["/api/loans"],
+  // });
+
+  const isLoading = false;
+
+  const loans: Loan[] = [
+    {
+      id: "loan_001",
+      userId: "admin",
+      amount: 15000,
+      duration: 12,
+      purpose: "Expand business inventory for seasonal demand",
+      status: "approved",
+      emi: 1354,
+      createdAt: "Feb 12, 2025",
+    },
+    {
+      id: "loan_002",
+      userId: "admin",
+      amount: 8000,
+      duration: 6,
+      purpose: "Purchase new event equipment",
+      status: "pending",
+      emi: 1376,
+      createdAt: "Mar 5, 2025",
+    },
+    {
+      id: "loan_003",
+      userId: "admin",
+      amount: 20000,
+      duration: 24,
+      purpose: "Renovation and expansion of store space",
+      status: "rejected",
+      emi: 904,
+      createdAt: "Dec 20, 2024",
+    },
+    {
+      id: "loan_004",
+      userId: "admin",
+      amount: 12000,
+      duration: 18,
+      purpose: "Upgrade business website and marketing tools",
+      status: "approved",
+      emi: 755,
+      createdAt: "Oct 8, 2024",
+    },
+  ];
 
   const applyLoanMutation = useMutation({
     mutationFn: async (data: LoanFormData) => {
@@ -308,7 +387,7 @@ export default function Loans() {
       const monthlyRate = 8.5 / 12 / 100;
       const emi = Math.round(
         (amount * monthlyRate * Math.pow(1 + monthlyRate, duration)) /
-        (Math.pow(1 + monthlyRate, duration) - 1)
+          (Math.pow(1 + monthlyRate, duration) - 1)
       );
 
       return apiRequest("POST", "/api/loans", {
@@ -346,13 +425,17 @@ export default function Loans() {
     applyLoanMutation.mutate(data);
   };
 
-  const activeLoan = loans?.find((l) => l.status === "approved" || l.status === "pending") || null;
+  const activeLoan =
+    loans?.find((l) => l.status === "approved" || l.status === "pending") ||
+    null;
 
   return (
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Loans</h1>
-        <p className="text-muted-foreground">Apply for loans and manage your applications</p>
+        <p className="text-muted-foreground">
+          Apply for loans and manage your applications
+        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -368,11 +451,16 @@ export default function Loans() {
         <Card data-testid="card-loan-application">
           <CardHeader>
             <CardTitle>Apply for a Loan</CardTitle>
-            <CardDescription>Fill out the form to submit a loan application</CardDescription>
+            <CardDescription>
+              Fill out the form to submit a loan application
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="amount"
@@ -402,7 +490,10 @@ export default function Loans() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Duration</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger data-testid="select-duration">
                             <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -448,7 +539,9 @@ export default function Loans() {
                   disabled={applyLoanMutation.isPending || !!activeLoan}
                   data-testid="button-apply-loan"
                 >
-                  {applyLoanMutation.isPending ? "Submitting..." : "Apply for Loan"}
+                  {applyLoanMutation.isPending
+                    ? "Submitting..."
+                    : "Apply for Loan"}
                 </Button>
 
                 {activeLoan && (

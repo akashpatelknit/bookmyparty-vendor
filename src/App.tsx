@@ -83,8 +83,8 @@ function AppLayout() {
                   <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">AD</AvatarFallback>
                 </Avatar>
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium leading-none">Admin User</p>
-                  <p className="text-xs text-muted-foreground">admin@eventhub.com</p>
+                  <p className="text-sm font-medium leading-none">Vendor</p>
+                  <p className="text-xs text-muted-foreground">vendor@gmail.com</p>
                 </div>
               </div>
             </div>

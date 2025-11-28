@@ -15,7 +15,13 @@ import {
   User,
   Shield,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,12 +44,18 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import type { Ticket, TicketResponse } from "@shared/schema";
+import type { Ticket, TicketResponse } from "@/types/types";
 import { cn } from "@/lib/utils";
 
 const ticketFormSchema = z.object({
-  subject: z.string().min(1, "Subject is required").max(100, "Subject too long"),
-  message: z.string().min(10, "Message must be at least 10 characters").max(1000, "Message too long"),
+  subject: z
+    .string()
+    .min(1, "Subject is required")
+    .max(100, "Subject too long"),
+  message: z
+    .string()
+    .min(10, "Message must be at least 10 characters")
+    .max(1000, "Message too long"),
 });
 
 type TicketFormData = z.infer<typeof ticketFormSchema>;
@@ -76,15 +88,25 @@ function getStatusColor(status: string) {
 
 function TicketResponseItem({ response }: { response: TicketResponse }) {
   return (
-    <div className={cn(
-      "flex gap-3 p-3 rounded-lg",
-      response.isAdmin ? "bg-primary/5" : "bg-muted/50"
-    )}>
+    <div
+      className={cn(
+        "flex gap-3 p-3 rounded-lg",
+        response.isAdmin ? "bg-primary/5" : "bg-muted/50"
+      )}
+    >
       <Avatar className="h-8 w-8">
-        <AvatarFallback className={cn(
-          response.isAdmin ? "bg-primary text-primary-foreground" : "bg-secondary"
-        )}>
-          {response.isAdmin ? <Shield className="h-4 w-4" /> : <User className="h-4 w-4" />}
+        <AvatarFallback
+          className={cn(
+            response.isAdmin
+              ? "bg-primary text-primary-foreground"
+              : "bg-secondary"
+          )}
+        >
+          {response.isAdmin ? (
+            <Shield className="h-4 w-4" />
+          ) : (
+            <User className="h-4 w-4" />
+          )}
         </AvatarFallback>
       </Avatar>
       <div className="flex-1">
@@ -92,7 +114,9 @@ function TicketResponseItem({ response }: { response: TicketResponse }) {
           <span className="text-sm font-medium">
             {response.isAdmin ? "Admin" : "You"}
           </span>
-          <span className="text-xs text-muted-foreground">{response.createdAt}</span>
+          <span className="text-xs text-muted-foreground">
+            {response.createdAt}
+          </span>
         </div>
         <p className="text-sm text-muted-foreground">{response.message}</p>
       </div>
@@ -103,10 +127,59 @@ function TicketResponseItem({ response }: { response: TicketResponse }) {
 function TicketItem({ ticket }: { ticket: Ticket }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: responses } = useQuery<TicketResponse[]>({
-    queryKey: ["/api/tickets", ticket.id, "responses"],
-    enabled: isOpen,
-  });
+  // const { data: responses } = useQuery<TicketResponse[]>({
+  //   queryKey: ["/api/tickets", ticket.id, "responses"],
+  //   enabled: isOpen,
+  // });
+
+  const responsesData: Record<string, TicketResponse[]> = {
+    tkt_001: [
+      {
+        id: "res_001",
+        ticketId: "tkt_001",
+        message: "We’re checking this issue for you. Please hold tight!",
+        isAdmin: true,
+        createdAt: "Nov 20, 2025, 10:20 AM",
+      },
+      {
+        id: "res_002",
+        ticketId: "tkt_001",
+        message: "Thank you. I’ll wait for the update.",
+        isAdmin: false,
+        createdAt: "Nov 20, 2025, 10:25 AM",
+      },
+    ],
+
+    tkt_002: [
+      {
+        id: "res_003",
+        ticketId: "tkt_002",
+        message:
+          "Payment confirmation is pending from the gateway. It will update shortly.",
+        isAdmin: true,
+        createdAt: "Nov 19, 2025, 3:00 PM",
+      },
+    ],
+
+    tkt_003: [
+      {
+        id: "res_004",
+        ticketId: "tkt_003",
+        message: "The issue has been fixed. Please try again.",
+        isAdmin: true,
+        createdAt: "Nov 18, 2025, 12:00 PM",
+      },
+      {
+        id: "res_005",
+        ticketId: "tkt_003",
+        message: "Yes, it’s working now. Thanks!",
+        isAdmin: false,
+        createdAt: "Nov 18, 2025, 12:10 PM",
+      },
+    ],
+  };
+
+  const responses = responsesData[ticket.id] || [];
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -117,15 +190,26 @@ function TicketItem({ ticket }: { ticket: Ticket }) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   {getStatusIcon(ticket.status || "open")}
-                  <CardTitle className="text-base truncate">{ticket.subject}</CardTitle>
+                  <CardTitle className="text-base truncate">
+                    {ticket.subject}
+                  </CardTitle>
                 </div>
-                <CardDescription className="line-clamp-1">{ticket.message}</CardDescription>
+                <CardDescription className="line-clamp-1">
+                  {ticket.message}
+                </CardDescription>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <Badge className={cn("text-xs", getStatusColor(ticket.status || "open"))}>
+                <Badge
+                  className={cn(
+                    "text-xs",
+                    getStatusColor(ticket.status || "open")
+                  )}
+                >
                   {ticket.status?.replace("_", " ")}
                 </Badge>
-                <span className="text-xs text-muted-foreground">{ticket.createdAt}</span>
+                <span className="text-xs text-muted-foreground">
+                  {ticket.createdAt}
+                </span>
                 {isOpen ? (
                   <ChevronUp className="h-4 w-4 text-muted-foreground" />
                 ) : (
@@ -147,9 +231,13 @@ function TicketItem({ ticket }: { ticket: Ticket }) {
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium">You</span>
-                  <span className="text-xs text-muted-foreground">{ticket.createdAt}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {ticket.createdAt}
+                  </span>
                 </div>
-                <p className="text-sm text-muted-foreground pl-8">{ticket.message}</p>
+                <p className="text-sm text-muted-foreground pl-8">
+                  {ticket.message}
+                </p>
               </div>
 
               {responses?.map((response) => (
@@ -180,9 +268,39 @@ export default function Support() {
     },
   });
 
-  const { data: tickets, isLoading } = useQuery<Ticket[]>({
-    queryKey: ["/api/tickets"],
-  });
+  // const { data: tickets, isLoading } = useQuery<Ticket[]>({
+  //   queryKey: ["/api/tickets"],
+  // });
+
+  const isLoading = false;
+
+  const tickets: Ticket[] = [
+    {
+      id: "tkt_001",
+      userId: "admin",
+      subject: "Unable to access my account",
+      message: "Whenever I try to log in, I get an unexpected error message.",
+      status: "open",
+      createdAt: "Nov 20, 2025, 10:15 AM",
+    },
+    {
+      id: "tkt_002",
+      userId: "admin",
+      subject: "Payment not reflecting",
+      message:
+        "I completed the payment but my wallet balance has not updated yet.",
+      status: "in_progress",
+      createdAt: "Nov 19, 2025, 2:30 PM",
+    },
+    {
+      id: "tkt_003",
+      userId: "admin",
+      subject: "Issue with event registration",
+      message: "The register button does nothing when clicked.",
+      status: "closed",
+      createdAt: "Nov 18, 2025, 11:05 AM",
+    },
+  ];
 
   const createTicketMutation = useMutation({
     mutationFn: async (data: TicketFormData) => {
@@ -222,7 +340,8 @@ export default function Support() {
   };
 
   const openTickets = tickets?.filter((t) => t.status === "open").length || 0;
-  const inProgressTickets = tickets?.filter((t) => t.status === "in_progress").length || 0;
+  const inProgressTickets =
+    tickets?.filter((t) => t.status === "in_progress").length || 0;
 
   return (
     <div className="p-6 space-y-6">
@@ -241,13 +360,18 @@ export default function Support() {
               </div>
               <div>
                 <CardTitle>Submit a Ticket</CardTitle>
-                <CardDescription>Describe your issue and we'll help you</CardDescription>
+                <CardDescription>
+                  Describe your issue and we'll help you
+                </CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="subject"
@@ -286,7 +410,12 @@ export default function Support() {
                 />
 
                 <div className="flex items-center justify-between gap-4">
-                  <Button type="button" variant="outline" size="sm" data-testid="button-attach-file">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    data-testid="button-attach-file"
+                  >
                     <Paperclip className="h-4 w-4 mr-2" />
                     Attach File
                   </Button>
@@ -321,7 +450,9 @@ export default function Support() {
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{openTickets}</p>
-                    <p className="text-sm text-muted-foreground">Open Tickets</p>
+                    <p className="text-sm text-muted-foreground">
+                      Open Tickets
+                    </p>
                   </div>
                 </div>
               </CardContent>

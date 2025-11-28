@@ -3,7 +3,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Eye, EyeOff, Shield, Check, X } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
@@ -17,11 +23,16 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { updatePasswordSchema, type UpdatePassword } from "@shared/schema";
+import {
+  updatePasswordSchema,
+  UpdatePassword,
+} from "@/validation/user.validation";
 import { cn } from "@/lib/utils";
 
 function PasswordStrengthIndicator({ password }: { password: string }) {
-  const getStrength = (pwd: string): { score: number; label: string; color: string } => {
+  const getStrength = (
+    pwd: string
+  ): { score: number; label: string; color: string } => {
     let score = 0;
     if (pwd.length >= 8) score += 25;
     if (pwd.length >= 12) score += 15;
@@ -53,12 +64,16 @@ function PasswordStrengthIndicator({ password }: { password: string }) {
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Password strength</span>
-          <span className={cn(
-            "font-medium",
-            strength.score < 40 && "text-destructive",
-            strength.score >= 40 && strength.score < 70 && "text-yellow-600 dark:text-yellow-500",
-            strength.score >= 70 && "text-emerald-600 dark:text-emerald-500"
-          )}>
+          <span
+            className={cn(
+              "font-medium",
+              strength.score < 40 && "text-destructive",
+              strength.score >= 40 &&
+                strength.score < 70 &&
+                "text-yellow-600 dark:text-yellow-500",
+              strength.score >= 70 && "text-emerald-600 dark:text-emerald-500"
+            )}
+          >
             {strength.label}
           </span>
         </div>
@@ -72,7 +87,9 @@ function PasswordStrengthIndicator({ password }: { password: string }) {
             ) : (
               <X className="h-3.5 w-3.5 text-muted-foreground" />
             )}
-            <span className={req.met ? "text-foreground" : "text-muted-foreground"}>
+            <span
+              className={req.met ? "text-foreground" : "text-muted-foreground"}
+            >
               {req.text}
             </span>
           </div>
@@ -109,7 +126,11 @@ function PasswordInput({
         className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
         data-testid={`${testId}-toggle`}
       >
-        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        {showPassword ? (
+          <EyeOff className="h-4 w-4" />
+        ) : (
+          <Eye className="h-4 w-4" />
+        )}
       </button>
     </div>
   );
@@ -141,7 +162,8 @@ export default function Password() {
     onError: () => {
       toast({
         title: "Error",
-        description: "Failed to update password. Please check your old password and try again.",
+        description:
+          "Failed to update password. Please check your old password and try again.",
         variant: "destructive",
       });
     },
@@ -157,7 +179,9 @@ export default function Password() {
     <div className="p-6 max-w-xl mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight">Update Password</h1>
-        <p className="text-muted-foreground">Keep your account secure with a strong password</p>
+        <p className="text-muted-foreground">
+          Keep your account secure with a strong password
+        </p>
       </div>
 
       <Card data-testid="card-password-update">
@@ -234,7 +258,9 @@ export default function Password() {
                 disabled={updatePasswordMutation.isPending}
                 data-testid="button-save-password"
               >
-                {updatePasswordMutation.isPending ? "Updating..." : "Update Password"}
+                {updatePasswordMutation.isPending
+                  ? "Updating..."
+                  : "Update Password"}
               </Button>
             </form>
           </Form>

@@ -9,10 +9,8 @@ import {
   Phone,
   Video,
   Info,
-  Check,
   CheckCheck,
 } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,7 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import type { Conversation, Message } from "@shared/schema";
+import type { Conversation, Message } from "@/types/types";
 
 type FilterType = "all" | "unread" | "starred";
 
@@ -57,17 +55,24 @@ function ConversationItem({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <span className={cn("text-sm truncate", conversation.unread && "font-semibold")}>
+          <span
+            className={cn(
+              "text-sm truncate",
+              conversation.unread && "font-semibold"
+            )}
+          >
             {conversation.participantName}
           </span>
           <span className="text-xs text-muted-foreground shrink-0">
             {conversation.lastMessageTime}
           </span>
         </div>
-        <p className={cn(
-          "text-sm truncate mt-0.5",
-          conversation.unread ? "text-foreground" : "text-muted-foreground"
-        )}>
+        <p
+          className={cn(
+            "text-sm truncate mt-0.5",
+            conversation.unread ? "text-foreground" : "text-muted-foreground"
+          )}
+        >
           {conversation.lastMessage}
         </p>
       </div>
@@ -81,7 +86,10 @@ function ConversationItem({
 function MessageBubble({ message }: { message: Message }) {
   return (
     <div
-      className={cn("flex mb-4", message.isOwn ? "justify-end" : "justify-start")}
+      className={cn(
+        "flex mb-4",
+        message.isOwn ? "justify-end" : "justify-start"
+      )}
       data-testid={`message-bubble-${message.id}`}
     >
       <div
@@ -93,21 +101,31 @@ function MessageBubble({ message }: { message: Message }) {
         )}
       >
         <p className="text-sm">{message.content}</p>
-        <div className={cn(
-          "flex items-center gap-1 mt-1",
-          message.isOwn ? "justify-end" : "justify-start"
-        )}>
-          <span className={cn(
-            "text-xs",
-            message.isOwn ? "text-primary-foreground/70" : "text-muted-foreground"
-          )}>
+        <div
+          className={cn(
+            "flex items-center gap-1 mt-1",
+            message.isOwn ? "justify-end" : "justify-start"
+          )}
+        >
+          <span
+            className={cn(
+              "text-xs",
+              message.isOwn
+                ? "text-primary-foreground/70"
+                : "text-muted-foreground"
+            )}
+          >
             {message.timestamp}
           </span>
           {message.isOwn && (
-            <CheckCheck className={cn(
-              "h-3.5 w-3.5",
-              message.isOwn ? "text-primary-foreground/70" : "text-muted-foreground"
-            )} />
+            <CheckCheck
+              className={cn(
+                "h-3.5 w-3.5",
+                message.isOwn
+                  ? "text-primary-foreground/70"
+                  : "text-muted-foreground"
+              )}
+            />
           )}
         </div>
       </div>
@@ -130,19 +148,99 @@ function EmptyState() {
 }
 
 export default function Messages() {
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [selectedConversation, setSelectedConversation] =
+    useState<Conversation | null>(null);
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [newMessage, setNewMessage] = useState("");
 
-  const { data: conversations, isLoading: conversationsLoading } = useQuery<Conversation[]>({
-    queryKey: ["/api/conversations"],
-  });
+  // const { data: conversations, isLoading: conversationsLoading } = useQuery<
+  //   Conversation[]
+  // >({
+  //   queryKey: ["/api/conversations"],
+  // });
 
-  const { data: messages, isLoading: messagesLoading } = useQuery<Message[]>({
-    queryKey: ["/api/messages", selectedConversation?.id],
-    enabled: !!selectedConversation?.id,
-  });
+  // const { data: messages, isLoading: messagesLoading } = useQuery<Message[]>({
+  //   queryKey: ["/api/messages", selectedConversation?.id],
+  //   enabled: !!selectedConversation?.id,
+  // });
+
+  const conversationsLoading = false;
+  const messagesLoading = false;
+
+  const conversations: Conversation[] = [
+    {
+      id: "c1",
+      participantName: "John Doe",
+      participantAvatar: "https://i.pravatar.cc/150?img=1",
+      lastMessage: "Got it, thanks!",
+      lastMessageTime: "10:24 AM",
+      unread: true,
+      starred: false,
+    },
+    {
+      id: "c2",
+      participantName: "Sarah Johnson",
+      participantAvatar: "https://i.pravatar.cc/150?img=2",
+      lastMessage: "When is the delivery?",
+      lastMessageTime: "Yesterday",
+      unread: false,
+      starred: true,
+    },
+    {
+      id: "c3",
+      participantName: "Michael Smith",
+      participantAvatar: "https://i.pravatar.cc/150?img=3",
+      lastMessage: "Let me check and update you.",
+      lastMessageTime: "Mon",
+      unread: false,
+      starred: false,
+    },
+    {
+      id: "c4",
+      participantName: "Emily Davis",
+      participantAvatar: "https://i.pravatar.cc/150?img=4",
+      lastMessage: "Thank you!",
+      lastMessageTime: "2 weeks ago",
+      unread: true,
+      starred: false,
+    },
+  ];
+
+  const messages: Message[] = [
+    {
+      id: "m1",
+      conversationId: "c1",
+      content: "Hi! I need help with my order.",
+      senderId: "user1",
+      timestamp: "10:00 AM",
+      isOwn: false,
+    },
+    {
+      id: "m2",
+      conversationId: "c1",
+      content: "Sure, can you share your order ID?",
+      senderId: "admin",
+      timestamp: "10:02 AM",
+      isOwn: true,
+    },
+    {
+      id: "m3",
+      conversationId: "c1",
+      content: "It's #ORD12345",
+      senderId: "user1",
+      timestamp: "10:10 AM",
+      isOwn: false,
+    },
+    {
+      id: "m4",
+      conversationId: "c1",
+      content: "Got it, checking now.",
+      senderId: "admin",
+      timestamp: "10:24 AM",
+      isOwn: true,
+    },
+  ];
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
@@ -150,19 +248,26 @@ export default function Messages() {
         conversationId: selectedConversation?.id,
         content,
         senderId: "admin",
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
         isOwn: true,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages", selectedConversation?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/messages", selectedConversation?.id],
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
       setNewMessage("");
     },
   });
 
   const filteredConversations = (conversations || []).filter((conv) => {
-    const matchesSearch = conv.participantName.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = conv.participantName
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     const matchesFilter =
       filter === "all" ||
       (filter === "unread" && conv.unread) ||
@@ -199,18 +304,26 @@ export default function Messages() {
               data-testid="input-search-conversations"
             />
           </div>
-          <Tabs value={filter} onValueChange={(v) => setFilter(v as FilterType)} className="w-full">
+          <Tabs
+            value={filter}
+            onValueChange={(v) => setFilter(v as FilterType)}
+            className="w-full"
+          >
             <TabsList className="w-full grid grid-cols-3">
-              <TabsTrigger value="all" data-testid="tab-all">All</TabsTrigger>
+              <TabsTrigger value="all" data-testid="tab-all">
+                All
+              </TabsTrigger>
               <TabsTrigger value="unread" data-testid="tab-unread">
                 Unread
-                {(conversations?.filter(c => c.unread).length || 0) > 0 && (
+                {(conversations?.filter((c) => c.unread).length || 0) > 0 && (
                   <Badge variant="secondary" className="ml-1.5 h-5 px-1.5">
-                    {conversations?.filter(c => c.unread).length}
+                    {conversations?.filter((c) => c.unread).length}
                   </Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="starred" data-testid="tab-starred">Starred</TabsTrigger>
+              <TabsTrigger value="starred" data-testid="tab-starred">
+                Starred
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -255,13 +368,19 @@ export default function Messages() {
             <div className="h-16 border-b flex items-center justify-between px-4">
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={selectedConversation.participantAvatar || undefined} />
+                  <AvatarImage
+                    src={selectedConversation.participantAvatar || undefined}
+                  />
                   <AvatarFallback className="bg-primary/10 text-primary">
-                    {selectedConversation.participantName.slice(0, 2).toUpperCase()}
+                    {selectedConversation.participantName
+                      .slice(0, 2)
+                      .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="font-medium">{selectedConversation.participantName}</h3>
+                  <h3 className="font-medium">
+                    {selectedConversation.participantName}
+                  </h3>
                   <p className="text-xs text-muted-foreground">Online</p>
                 </div>
               </div>
@@ -286,7 +405,13 @@ export default function Messages() {
               {messagesLoading ? (
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className={cn("flex", i % 2 === 0 ? "justify-end" : "justify-start")}>
+                    <div
+                      key={i}
+                      className={cn(
+                        "flex",
+                        i % 2 === 0 ? "justify-end" : "justify-start"
+                      )}
+                    >
                       <Skeleton className="h-16 w-48 rounded-2xl" />
                     </div>
                   ))}

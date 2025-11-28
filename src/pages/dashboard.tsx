@@ -9,7 +9,13 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -20,8 +26,17 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Bar, BarChart, XAxis, YAxis, Pie, PieChart, Cell, ResponsiveContainer, CartesianGrid } from "recharts";
-import type { DashboardStats, Activity } from "@shared/schema";
+import {
+  Bar,
+  BarChart,
+  XAxis,
+  YAxis,
+  Pie,
+  PieChart,
+  Cell,
+  CartesianGrid,
+} from "recharts";
+import type { DashboardStats, Activity } from "@/types/types";
 import { Link } from "wouter";
 
 const chartConfig: ChartConfig = {
@@ -88,9 +103,11 @@ function StatsCard({
   }
 
   return (
-    <Card data-testid={`card-stat-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+    <Card data-testid={`card-stat-${title.toLowerCase().replace(/\s+/g, "-")}`}>
       <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          {title}
+        </CardTitle>
         <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center">
           <Icon className="h-4 w-4 text-primary" />
         </div>
@@ -104,7 +121,11 @@ function StatsCard({
             ) : (
               <ArrowDownRight className="h-3 w-3 text-destructive" />
             )}
-            <span className={`text-xs ${trend === "up" ? "text-emerald-500" : "text-destructive"}`}>
+            <span
+              className={`text-xs ${
+                trend === "up" ? "text-emerald-500" : "text-destructive"
+              }`}
+            >
               {trendValue}
             </span>
             <span className="text-xs text-muted-foreground">vs last month</span>
@@ -117,9 +138,15 @@ function StatsCard({
 
 function ActivityItem({ activity }: { activity: Activity }) {
   return (
-    <div className="flex items-start gap-3 py-3" data-testid={`activity-item-${activity.id}`}>
+    <div
+      className="flex items-start gap-3 py-3"
+      data-testid={`activity-item-${activity.id}`}
+    >
       <Avatar className="h-9 w-9">
-        <AvatarImage src={activity.userAvatar || undefined} alt={activity.userName || "User"} />
+        <AvatarImage
+          src={activity.userAvatar || undefined}
+          alt={activity.userName || "User"}
+        />
         <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
           {(activity.userName || "U").slice(0, 2).toUpperCase()}
         </AvatarFallback>
@@ -129,7 +156,9 @@ function ActivityItem({ activity }: { activity: Activity }) {
           <span className="font-medium">{activity.userName}</span>{" "}
           <span className="text-muted-foreground">{activity.description}</span>
         </p>
-        <p className="text-xs text-muted-foreground mt-0.5">{activity.timestamp}</p>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          {activity.timestamp}
+        </p>
       </div>
       <Badge variant="secondary" className="text-xs shrink-0">
         {activity.action}
@@ -139,13 +168,88 @@ function ActivityItem({ activity }: { activity: Activity }) {
 }
 
 export default function Dashboard() {
-  const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
-    queryKey: ["/api/dashboard/stats"],
-  });
+  // const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
+  //   queryKey: ["/api/dashboard/stats"],
+  // });
 
-  const { data: activities, isLoading: activitiesLoading } = useQuery<Activity[]>({
-    queryKey: ["/api/activities"],
-  });
+  // const { data: activities, isLoading: activitiesLoading } = useQuery<
+  //   Activity[]
+  // >({
+  //   queryKey: ["/api/activities"],
+  // });
+
+  const statsLoading = false;
+  const activitiesLoading = false;
+
+  const stats: DashboardStats = {
+    totalEvents: 42,
+    activeEvents: 18,
+    registeredUsers: 1325,
+    totalRevenue: 98400,
+    monthlyRevenue: [
+      { month: "Jan", revenue: 12000 },
+      { month: "Feb", revenue: 15000 },
+      { month: "Mar", revenue: 18000 },
+      { month: "Apr", revenue: 16000 },
+      { month: "May", revenue: 20000 },
+      { month: "Jun", revenue: 17400 },
+    ],
+    categoryBreakdown: [
+      { category: "music", count: 12, fill: "hsl(var(--chart-1))" },
+      { category: "sports", count: 9, fill: "hsl(var(--chart-2))" },
+      { category: "tech", count: 8, fill: "hsl(var(--chart-3))" },
+      { category: "art", count: 7, fill: "hsl(var(--chart-4))" },
+      { category: "food", count: 6, fill: "hsl(var(--chart-5))" },
+    ],
+  };
+
+  const activities: Activity[] = [
+    {
+      id: "act_001",
+      userId: "u1",
+      userName: "John Doe",
+      userAvatar: "https://i.pravatar.cc/150?img=1",
+      action: "created",
+      description: "created a new event: Summer Music Fest",
+      timestamp: "Jun 20, 2025 • 10:24 AM",
+    },
+    {
+      id: "act_002",
+      userId: "u2",
+      userName: "Emily Carter",
+      userAvatar: "https://i.pravatar.cc/150?img=2",
+      action: "registered",
+      description: "registered for Photography Masterclass",
+      timestamp: "Jun 19, 2025 • 3:15 PM",
+    },
+    {
+      id: "act_003",
+      userId: "u3",
+      userName: "Michael Brown",
+      userAvatar: "https://i.pravatar.cc/150?img=3",
+      action: "purchased",
+      description: "booked 2 tickets for Tech Expo 2025",
+      timestamp: "Jun 18, 2025 • 8:42 AM",
+    },
+    {
+      id: "act_004",
+      userId: "u4",
+      userName: "Sarah Johnson",
+      userAvatar: "https://i.pravatar.cc/150?img=4",
+      action: "updated",
+      description: "updated event details for Cooking Fiesta",
+      timestamp: "Jun 17, 2025 • 11:30 AM",
+    },
+    {
+      id: "act_005",
+      userId: "u5",
+      userName: "Daniel Lee",
+      userAvatar: "https://i.pravatar.cc/150?img=5",
+      action: "cancelled",
+      description: "cancelled booking for Startup Meetup",
+      timestamp: "Jun 16, 2025 • 4:05 PM",
+    },
+  ];
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -160,7 +264,9 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back! Here's an overview of your events.</p>
+          <p className="text-muted-foreground">
+            Welcome back! Here's an overview of your events.
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Link href="/orders">
@@ -218,7 +324,9 @@ export default function Dashboard() {
         <Card className="lg:col-span-2" data-testid="card-revenue-chart">
           <CardHeader>
             <CardTitle>Monthly Revenue</CardTitle>
-            <CardDescription>Revenue trends over the past 6 months</CardDescription>
+            <CardDescription>
+              Revenue trends over the past 6 months
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {statsLoading ? (
@@ -226,7 +334,11 @@ export default function Dashboard() {
             ) : (
               <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <BarChart data={stats?.monthlyRevenue || []} accessibilityLayer>
-                  <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-muted" />
+                  <CartesianGrid
+                    vertical={false}
+                    strokeDasharray="3 3"
+                    className="stroke-muted"
+                  />
                   <XAxis
                     dataKey="month"
                     tickLine={false}
@@ -245,7 +357,11 @@ export default function Dashboard() {
                     cursor={{ fill: "hsl(var(--muted))", opacity: 0.3 }}
                     content={<ChartTooltipContent />}
                   />
-                  <Bar dataKey="revenue" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
+                  <Bar
+                    dataKey="revenue"
+                    fill="hsl(var(--chart-1))"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ChartContainer>
             )}
@@ -262,9 +378,14 @@ export default function Dashboard() {
             {statsLoading ? (
               <Skeleton className="h-[300px] w-full" />
             ) : (
-              <ChartContainer config={pieChartConfig} className="h-[300px] w-full">
+              <ChartContainer
+                config={pieChartConfig}
+                className="h-[300px] w-full"
+              >
                 <PieChart>
-                  <ChartTooltip content={<ChartTooltipContent nameKey="category" />} />
+                  <ChartTooltip
+                    content={<ChartTooltipContent nameKey="category" />}
+                  />
                   <Pie
                     data={stats?.categoryBreakdown || []}
                     dataKey="count"
@@ -284,7 +405,10 @@ export default function Dashboard() {
             )}
             <div className="grid grid-cols-2 gap-2 mt-4">
               {(stats?.categoryBreakdown || []).map((category) => (
-                <div key={category.category} className="flex items-center gap-2">
+                <div
+                  key={category.category}
+                  className="flex items-center gap-2"
+                >
                   <div
                     className="h-3 w-3 rounded-full"
                     style={{ backgroundColor: category.fill }}

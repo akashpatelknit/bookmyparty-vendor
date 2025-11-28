@@ -9,7 +9,13 @@ import {
   TrendingUp,
   Calendar,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -39,10 +45,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
+  Area,
+  AreaChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import type { Wallet, Transaction } from "@shared/schema";
+import type { Wallet, Transaction } from "@/types/types";
 import { cn } from "@/lib/utils";
 
 const chartConfig = {
@@ -52,7 +69,13 @@ const chartConfig = {
   },
 };
 
-function BalanceCard({ balance, loading }: { balance: number; loading: boolean }) {
+function BalanceCard({
+  balance,
+  loading,
+}: {
+  balance: number;
+  loading: boolean;
+}) {
   if (loading) {
     return (
       <Card className="bg-gradient-to-br from-primary to-primary/80">
@@ -65,7 +88,10 @@ function BalanceCard({ balance, loading }: { balance: number; loading: boolean }
   }
 
   return (
-    <Card className="bg-gradient-to-br from-primary to-primary/80" data-testid="card-balance">
+    <Card
+      className="bg-gradient-to-br from-primary to-primary/80"
+      data-testid="card-balance"
+    >
       <CardContent className="p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center">
@@ -144,7 +170,11 @@ function AddMoneyDialog({ onSubmit }: { onSubmit: (amount: number) => void }) {
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={!amount || parseFloat(amount) <= 0} data-testid="button-confirm-add">
+          <Button
+            onClick={handleSubmit}
+            disabled={!amount || parseFloat(amount) <= 0}
+            data-testid="button-confirm-add"
+          >
             Add Money
           </Button>
         </DialogFooter>
@@ -153,7 +183,13 @@ function AddMoneyDialog({ onSubmit }: { onSubmit: (amount: number) => void }) {
   );
 }
 
-function WithdrawDialog({ onSubmit, maxAmount }: { onSubmit: (amount: number) => void; maxAmount: number }) {
+function WithdrawDialog({
+  onSubmit,
+  maxAmount,
+}: {
+  onSubmit: (amount: number) => void;
+  maxAmount: number;
+}) {
   const [amount, setAmount] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -169,7 +205,11 @@ function WithdrawDialog({ onSubmit, maxAmount }: { onSubmit: (amount: number) =>
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex-1" data-testid="button-withdraw">
+        <Button
+          variant="outline"
+          className="flex-1"
+          data-testid="button-withdraw"
+        >
           <ArrowUpRight className="h-4 w-4 mr-2" />
           Withdraw
         </Button>
@@ -178,7 +218,8 @@ function WithdrawDialog({ onSubmit, maxAmount }: { onSubmit: (amount: number) =>
         <DialogHeader>
           <DialogTitle>Withdraw Money</DialogTitle>
           <DialogDescription>
-            Enter the amount you want to withdraw. Maximum: ${maxAmount.toLocaleString()}
+            Enter the amount you want to withdraw. Maximum: $
+            {maxAmount.toLocaleString()}
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
@@ -200,7 +241,11 @@ function WithdrawDialog({ onSubmit, maxAmount }: { onSubmit: (amount: number) =>
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={!amount || parseFloat(amount) <= 0 || parseFloat(amount) > maxAmount}
+            disabled={
+              !amount ||
+              parseFloat(amount) <= 0 ||
+              parseFloat(amount) > maxAmount
+            }
             data-testid="button-confirm-withdraw"
           >
             Withdraw
@@ -216,13 +261,19 @@ function TransactionRow({ transaction }: { transaction: Transaction }) {
 
   return (
     <TableRow data-testid={`transaction-row-${transaction.id}`}>
-      <TableCell className="font-mono text-sm">{transaction.id.slice(0, 8)}</TableCell>
+      <TableCell className="font-mono text-sm">
+        {transaction.id.slice(0, 8)}
+      </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
-          <div className={cn(
-            "h-8 w-8 rounded-full flex items-center justify-center",
-            isCredit ? "bg-emerald-100 dark:bg-emerald-900/30" : "bg-red-100 dark:bg-red-900/30"
-          )}>
+          <div
+            className={cn(
+              "h-8 w-8 rounded-full flex items-center justify-center",
+              isCredit
+                ? "bg-emerald-100 dark:bg-emerald-900/30"
+                : "bg-red-100 dark:bg-red-900/30"
+            )}
+          >
             {isCredit ? (
               <ArrowDownLeft className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
             ) : (
@@ -232,23 +283,30 @@ function TransactionRow({ transaction }: { transaction: Transaction }) {
           <span className="capitalize">{transaction.type}</span>
         </div>
       </TableCell>
-      <TableCell className={cn(
-        "font-medium",
-        isCredit ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
-      )}>
+      <TableCell
+        className={cn(
+          "font-medium",
+          isCredit
+            ? "text-emerald-600 dark:text-emerald-400"
+            : "text-red-600 dark:text-red-400"
+        )}
+      >
         {isCredit ? "+" : "-"}${transaction.amount.toLocaleString()}
       </TableCell>
       <TableCell>
         <Badge
           variant={transaction.status === "completed" ? "default" : "secondary"}
           className={cn(
-            transaction.status === "completed" && "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+            transaction.status === "completed" &&
+              "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
           )}
         >
           {transaction.status}
         </Badge>
       </TableCell>
-      <TableCell className="text-muted-foreground">{transaction.date}</TableCell>
+      <TableCell className="text-muted-foreground">
+        {transaction.date}
+      </TableCell>
     </TableRow>
   );
 }
@@ -256,9 +314,78 @@ function TransactionRow({ transaction }: { transaction: Transaction }) {
 export default function Wallet() {
   const [typeFilter, setTypeFilter] = useState<string>("all");
 
-  const { data: wallet, isLoading } = useQuery<Wallet>({
-    queryKey: ["/api/wallet"],
-  });
+  // const { data: wallet, isLoading } = useQuery<Wallet>({
+  //   queryKey: ["/api/wallet"],
+  // });
+  const isLoading = false;
+  const wallet: Wallet = {
+    balance: 4250,
+    transactions: [
+      {
+        id: "txn_001",
+        userId: "admin",
+        type: "credit",
+        amount: 500,
+        status: "completed",
+        description: "Wallet top-up",
+        date: "Nov 12, 2025",
+      },
+      {
+        id: "txn_002",
+        userId: "admin",
+        type: "debit",
+        amount: 300,
+        status: "completed",
+        description: "Withdrawal",
+        date: "Nov 14, 2025",
+      },
+      {
+        id: "txn_003",
+        userId: "admin",
+        type: "credit",
+        amount: 1500,
+        status: "completed",
+        description: "Event Earnings",
+        date: "Nov 15, 2025",
+      },
+      {
+        id: "txn_004",
+        userId: "admin",
+        type: "debit",
+        amount: 200,
+        status: "completed",
+        description: "Service Fee",
+        date: "Nov 18, 2025",
+      },
+      {
+        id: "txn_005",
+        userId: "admin",
+        type: "credit",
+        amount: 2750,
+        status: "completed",
+        description: "Event Payout",
+        date: "Nov 20, 2025",
+      },
+      {
+        id: "txn_006",
+        userId: "admin",
+        type: "debit",
+        amount: 500,
+        status: "completed",
+        description: "Bank Withdrawal",
+        date: "Nov 22, 2025",
+      },
+      {
+        id: "txn_007",
+        userId: "admin",
+        type: "credit",
+        amount: 200,
+        status: "completed",
+        description: "Cashback",
+        date: "Nov 23, 2025",
+      },
+    ],
+  };
 
   const addMoneyMutation = useMutation({
     mutationFn: async (amount: number) => {
@@ -268,7 +395,11 @@ export default function Wallet() {
         amount,
         status: "completed",
         description: "Wallet top-up",
-        date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+        date: new Date().toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }),
       });
     },
     onSuccess: () => {
@@ -284,7 +415,11 @@ export default function Wallet() {
         amount,
         status: "completed",
         description: "Withdrawal",
-        date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+        date: new Date().toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }),
       });
     },
     onSuccess: () => {
@@ -310,7 +445,9 @@ export default function Wallet() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Wallet</h1>
-        <p className="text-muted-foreground">Manage your funds and transactions</p>
+        <p className="text-muted-foreground">
+          Manage your funds and transactions
+        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -318,7 +455,9 @@ export default function Wallet() {
         <div className="lg:col-span-1 space-y-4">
           <BalanceCard balance={wallet?.balance || 0} loading={isLoading} />
           <div className="flex gap-3">
-            <AddMoneyDialog onSubmit={(amount) => addMoneyMutation.mutate(amount)} />
+            <AddMoneyDialog
+              onSubmit={(amount) => addMoneyMutation.mutate(amount)}
+            />
             <WithdrawDialog
               onSubmit={(amount) => withdrawMutation.mutate(amount)}
               maxAmount={wallet?.balance || 0}
@@ -330,7 +469,9 @@ export default function Wallet() {
         <Card className="lg:col-span-2" data-testid="card-activity-chart">
           <CardHeader>
             <CardTitle>Wallet Activity</CardTitle>
-            <CardDescription>Balance trend over the past 6 months</CardDescription>
+            <CardDescription>
+              Balance trend over the past 6 months
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -339,12 +480,30 @@ export default function Wallet() {
               <ChartContainer config={chartConfig} className="h-[200px] w-full">
                 <AreaChart data={walletActivityData} accessibilityLayer>
                   <defs>
-                    <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
+                    <linearGradient
+                      id="colorBalance"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor="hsl(var(--chart-1))"
+                        stopOpacity={0.3}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="hsl(var(--chart-1))"
+                        stopOpacity={0}
+                      />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-muted" />
+                  <CartesianGrid
+                    vertical={false}
+                    strokeDasharray="3 3"
+                    className="stroke-muted"
+                  />
                   <XAxis
                     dataKey="date"
                     tickLine={false}
@@ -380,11 +539,16 @@ export default function Wallet() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <CardTitle>Transaction History</CardTitle>
-              <CardDescription>View and filter your recent transactions</CardDescription>
+              <CardDescription>
+                View and filter your recent transactions
+              </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-[150px]" data-testid="select-type-filter">
+                <SelectTrigger
+                  className="w-[150px]"
+                  data-testid="select-type-filter"
+                >
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue placeholder="Filter by type" />
                 </SelectTrigger>
@@ -422,7 +586,10 @@ export default function Wallet() {
               </TableHeader>
               <TableBody>
                 {filteredTransactions.map((transaction) => (
-                  <TransactionRow key={transaction.id} transaction={transaction} />
+                  <TransactionRow
+                    key={transaction.id}
+                    transaction={transaction}
+                  />
                 ))}
               </TableBody>
             </Table>

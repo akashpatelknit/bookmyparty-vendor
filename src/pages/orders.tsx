@@ -6,12 +6,16 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
-  Calendar,
   User,
   CreditCard,
-  X,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -39,12 +43,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
-import type { Order } from "@shared/schema";
+import type { Order } from "@/types/types";
 import { cn } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 10;
 
-function getStatusVariant(status: string): "default" | "secondary" | "destructive" | "outline" {
+function getStatusVariant(
+  status: string
+): "default" | "secondary" | "destructive" | "outline" {
   switch (status.toLowerCase()) {
     case "completed":
     case "paid":
@@ -115,14 +121,17 @@ function OrderDetailsModal({
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-muted-foreground">Amount</p>
-                <p className="font-medium text-lg">${order.amount.toLocaleString()}</p>
+                <p className="font-medium text-lg">
+                  ${order.amount.toLocaleString()}
+                </p>
               </div>
               <div>
                 <p className="text-muted-foreground">Status</p>
                 <Badge
                   variant={getStatusVariant(order.paymentStatus || "")}
                   className={cn(
-                    order.paymentStatus === "paid" && "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                    order.paymentStatus === "paid" &&
+                      "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
                   )}
                 >
                   {order.paymentStatus}
@@ -147,7 +156,9 @@ function OrderDetailsModal({
 function OrderRow({ order, onView }: { order: Order; onView: () => void }) {
   return (
     <TableRow data-testid={`order-row-${order.id}`}>
-      <TableCell className="font-mono text-sm">{order.id.slice(0, 8)}</TableCell>
+      <TableCell className="font-mono text-sm">
+        {order.id.slice(0, 8)}
+      </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -156,13 +167,18 @@ function OrderRow({ order, onView }: { order: Order; onView: () => void }) {
           <span>{order.userName}</span>
         </div>
       </TableCell>
-      <TableCell className="max-w-[200px] truncate">{order.eventTitle}</TableCell>
-      <TableCell className="font-medium">${order.amount.toLocaleString()}</TableCell>
+      <TableCell className="max-w-[200px] truncate">
+        {order.eventTitle}
+      </TableCell>
+      <TableCell className="font-medium">
+        ${order.amount.toLocaleString()}
+      </TableCell>
       <TableCell>
         <Badge
           variant={getStatusVariant(order.paymentStatus || "")}
           className={cn(
-            order.paymentStatus === "paid" && "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+            order.paymentStatus === "paid" &&
+              "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
           )}
         >
           {order.paymentStatus}
@@ -171,7 +187,12 @@ function OrderRow({ order, onView }: { order: Order; onView: () => void }) {
       <TableCell>{order.eventDate}</TableCell>
       <TableCell className="text-muted-foreground">{order.createdAt}</TableCell>
       <TableCell>
-        <Button variant="ghost" size="icon" onClick={onView} data-testid={`button-view-${order.id}`}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onView}
+          data-testid={`button-view-${order.id}`}
+        >
           <Eye className="h-4 w-4" />
         </Button>
       </TableCell>
@@ -186,9 +207,122 @@ export default function Orders() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { data: orders, isLoading } = useQuery<Order[]>({
-    queryKey: ["/api/orders"],
-  });
+  // const { data: orders, isLoading } = useQuery<Order[]>({
+  //   queryKey: ["/api/orders"],
+  // });
+  const isLoading = false;
+  const orders: Order[] = [
+    {
+      id: "ord_001",
+      userId: "u1",
+      eventId: "e1",
+      userName: "John Doe",
+      eventTitle: "Music Festival 2025",
+      amount: 1299,
+      paymentStatus: "paid",
+      eventDate: "2025-12-15",
+      createdAt: "2025-11-20 10:45 AM",
+    },
+    {
+      id: "ord_002",
+      userId: "u2",
+      eventId: "e3",
+      userName: "Sarah Johnson",
+      eventTitle: "Winter Coding Bootcamp",
+      amount: 899,
+      paymentStatus: "pending",
+      eventDate: "2025-12-20",
+      createdAt: "2025-11-21 2:15 PM",
+    },
+    {
+      id: "ord_003",
+      userId: "u3",
+      eventId: "e5",
+      userName: "Michael Smith",
+      eventTitle: "Startup Pitch Night",
+      amount: 499,
+      paymentStatus: "failed",
+      eventDate: "2025-12-05",
+      createdAt: "2025-11-19 6:30 PM",
+    },
+    {
+      id: "ord_004",
+      userId: "u4",
+      eventId: "e2",
+      userName: "Emily Davis",
+      eventTitle: "Art Workshop — Masterclass",
+      amount: 1499,
+      paymentStatus: "paid",
+      eventDate: "2025-12-18",
+      createdAt: "2025-11-18 11:22 AM",
+    },
+    {
+      id: "ord_005",
+      userId: "u5",
+      eventId: "e4",
+      userName: "James Wilson",
+      eventTitle: "Tech Leadership Summit",
+      amount: 2499,
+      paymentStatus: "cancelled",
+      eventDate: "2025-12-30",
+      createdAt: "2025-11-22 4:10 PM",
+    },
+    {
+      id: "ord_006",
+      userId: "u6",
+      eventId: "e7",
+      userName: "Sophia Martinez",
+      eventTitle: "AI Hackathon Extreme",
+      amount: 1999,
+      paymentStatus: "paid",
+      eventDate: "2025-12-09",
+      createdAt: "2025-11-23 9:05 AM",
+    },
+    {
+      id: "ord_007",
+      userId: "u7",
+      eventId: "e6",
+      userName: "David Brown",
+      eventTitle: "Photography Masterclass",
+      amount: 799,
+      paymentStatus: "pending",
+      eventDate: "2025-12-12",
+      createdAt: "2025-11-24 1:28 PM",
+    },
+    {
+      id: "ord_008",
+      userId: "u8",
+      eventId: "e8",
+      userName: "Ava Thompson",
+      eventTitle: "Business Growth Workshop",
+      amount: 999,
+      paymentStatus: "paid",
+      eventDate: "2025-12-22",
+      createdAt: "2025-11-25 3:17 PM",
+    },
+    {
+      id: "ord_009",
+      userId: "u9",
+      eventId: "e9",
+      userName: "Daniel Clark",
+      eventTitle: "Cultural Food Fiesta",
+      amount: 399,
+      paymentStatus: "failed",
+      eventDate: "2025-12-28",
+      createdAt: "2025-11-26 7:50 PM",
+    },
+    {
+      id: "ord_010",
+      userId: "u10",
+      eventId: "e10",
+      userName: "Emma Walker",
+      eventTitle: "Corporate Wellness Meetup",
+      amount: 599,
+      paymentStatus: "paid",
+      eventDate: "2025-12-20",
+      createdAt: "2025-11-27 11:05 AM",
+    },
+  ];
 
   const filteredOrders = (orders || []).filter((order) => {
     const matchesSearch =
@@ -196,7 +330,8 @@ export default function Orders() {
       order.eventTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.id.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus =
-      statusFilter === "all" || order.paymentStatus?.toLowerCase() === statusFilter.toLowerCase();
+      statusFilter === "all" ||
+      order.paymentStatus?.toLowerCase() === statusFilter.toLowerCase();
     return matchesSearch && matchesStatus;
   });
 
@@ -215,7 +350,9 @@ export default function Orders() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Orders</h1>
-        <p className="text-muted-foreground">Manage and track all event orders</p>
+        <p className="text-muted-foreground">
+          Manage and track all event orders
+        </p>
       </div>
 
       <Card data-testid="card-orders">
@@ -239,7 +376,10 @@ export default function Orders() {
                 />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full sm:w-[150px]" data-testid="select-status-filter">
+                <SelectTrigger
+                  className="w-full sm:w-[150px]"
+                  data-testid="select-status-filter"
+                >
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue placeholder="Filter status" />
                 </SelectTrigger>
@@ -299,8 +439,11 @@ export default function Orders() {
                 <div className="flex items-center justify-between mt-4 pt-4 border-t">
                   <p className="text-sm text-muted-foreground">
                     Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
-                    {Math.min(currentPage * ITEMS_PER_PAGE, filteredOrders.length)} of{" "}
-                    {filteredOrders.length} orders
+                    {Math.min(
+                      currentPage * ITEMS_PER_PAGE,
+                      filteredOrders.length
+                    )}{" "}
+                    of {filteredOrders.length} orders
                   </p>
                   <div className="flex items-center gap-2">
                     <Button
@@ -314,35 +457,42 @@ export default function Orders() {
                       Previous
                     </Button>
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        let pageNum;
-                        if (totalPages <= 5) {
-                          pageNum = i + 1;
-                        } else if (currentPage <= 3) {
-                          pageNum = i + 1;
-                        } else if (currentPage >= totalPages - 2) {
-                          pageNum = totalPages - 4 + i;
-                        } else {
-                          pageNum = currentPage - 2 + i;
+                      {Array.from(
+                        { length: Math.min(5, totalPages) },
+                        (_, i) => {
+                          let pageNum;
+                          if (totalPages <= 5) {
+                            pageNum = i + 1;
+                          } else if (currentPage <= 3) {
+                            pageNum = i + 1;
+                          } else if (currentPage >= totalPages - 2) {
+                            pageNum = totalPages - 4 + i;
+                          } else {
+                            pageNum = currentPage - 2 + i;
+                          }
+                          return (
+                            <Button
+                              key={pageNum}
+                              variant={
+                                currentPage === pageNum ? "default" : "outline"
+                              }
+                              size="sm"
+                              onClick={() => setCurrentPage(pageNum)}
+                              className="w-8 h-8 p-0"
+                              data-testid={`button-page-${pageNum}`}
+                            >
+                              {pageNum}
+                            </Button>
+                          );
                         }
-                        return (
-                          <Button
-                            key={pageNum}
-                            variant={currentPage === pageNum ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setCurrentPage(pageNum)}
-                            className="w-8 h-8 p-0"
-                            data-testid={`button-page-${pageNum}`}
-                          >
-                            {pageNum}
-                          </Button>
-                        );
-                      })}
+                      )}
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      onClick={() =>
+                        setCurrentPage((p) => Math.min(totalPages, p + 1))
+                      }
                       disabled={currentPage === totalPages}
                       data-testid="button-next-page"
                     >

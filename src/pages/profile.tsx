@@ -2,16 +2,14 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { User, Mail, Phone, MapPin, Camera, Save, Clock } from "lucide-react";
 import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Camera,
-  Save,
-  Clock,
-} from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,7 +25,8 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { updateProfileSchema, type UpdateProfile, type User as UserType } from "@shared/schema";
+import { UserType } from "@/types/types";
+import { UpdateProfile, updateProfileSchema } from "@/validation/user.validation";
 
 export default function Profile() {
   const { toast } = useToast();
@@ -45,12 +44,14 @@ export default function Profile() {
       phone: "",
       address: "",
     },
-    values: user ? {
-      name: user.name || "",
-      email: user.email || "",
-      phone: user.phone || "",
-      address: user.address || "",
-    } : undefined,
+    values: user
+      ? {
+          name: user.name || "",
+          email: user.email || "",
+          phone: user.phone || "",
+          address: user.address || "",
+        }
+      : undefined,
   });
 
   const updateProfileMutation = useMutation({
@@ -117,7 +118,10 @@ export default function Profile() {
             <div className="flex flex-col items-center">
               <div className="relative group">
                 <Avatar className="h-32 w-32">
-                  <AvatarImage src={avatarPreview || user?.avatar || undefined} alt={user?.name} />
+                  <AvatarImage
+                    src={avatarPreview || user?.avatar || undefined}
+                    alt={user?.name}
+                  />
                   <AvatarFallback className="bg-primary/10 text-primary text-3xl font-medium">
                     {(user?.name || "U").slice(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -157,7 +161,10 @@ export default function Profile() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="name"
@@ -290,7 +297,9 @@ export default function Profile() {
             </div>
             <div>
               <p className="text-muted-foreground">Account ID</p>
-              <p className="font-mono text-xs">{user?.id?.slice(0, 8) || "N/A"}</p>
+              <p className="font-mono text-xs">
+                {user?.id?.slice(0, 8) || "N/A"}
+              </p>
             </div>
           </div>
         </CardContent>
